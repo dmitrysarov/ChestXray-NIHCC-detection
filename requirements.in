@@ -1,0 +1,14 @@
+wheel  # https://github.com/open-mmlab/mmdetection/issues/10665
+torch==2.1.0
+#git+ssh://git@github.com/open-mmlab/mmdetection.git@v3.3.0#egg=mmdet  # should be installed afterwords
+python-git
+mlflow
+mmengine
+setuptools==69.5.1
+
+
+#dev
+black
+flake8
+isort
+pip-tools

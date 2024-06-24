@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a8aa468a-5fa5-414f-883b-c40aa6ccffd4" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.lint/lint.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/chestxray/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/chestxray/datasets/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/chestxray/datasets/chessxray.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/chestxray/datasets/samplers/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/chestxray/datasets/samplers/class_balanced_sampler.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/chestxray/hooks/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/chestxray/hooks/mlflow.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/chestxray/logger.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/__base__/datasets/chestxray.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/__base__/default_runtime.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/__base__/schedules/schedule_1x.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/yolo/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/yolo/metafile.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/yolo/yolov3_d53_8xb8-320-273e_coco.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/yolo/yolov3_d53_8xb8-amp-ms-608-273e_coco.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/yolo/yolov3_d53_8xb8-ms-416-273e_coco.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/yolo/yolov3_d53_8xb8-ms-608-273e_coco.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/yolo/yolov3_mobilenetv2_8xb24-320-300e_coco.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/yolo/yolov3_mobilenetv2_8xb24-ms-416-300e_coco.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/yolox/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/yolox/metafile.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/yolox/yolox_l_8xb8-300e_coco.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/yolox/yolox_m_8xb8-300e_coco.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/yolox/yolox_nano_8xb8-300e_coco.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/yolox/yolox_s_8xb8-300e_coco.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/yolox/yolox_tiny_8xb8-300e_coco.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/yolox/yolox_tta.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/configs/yolox/yolox_x_8xb8-300e_coco.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/install_requirements.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.in" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements_after.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/train_old.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/setup.cfg" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="NamedScopeManager">
+    <scope name="mmdet" pattern="ext[Python 3.9 (chestxray)]:mmdet/*||ext[Python 3.9 (chestxray)]:mmengine/*" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2iBsFiW9CVG5Uz8VNA87flcH7Av" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "/Users/dmitry/Projects/dantiai/chestxray",
+    "settings.editor.selected.configurable": "watcher.settings"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/scripts" />
+      <recent name="$PROJECT_DIR$/chestxray" />
+      <recent name="$PROJECT_DIR$/chestxray/datasets" />
+      <recent name="$PROJECT_DIR$/chestxray/hooks" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/configs" />
+      <recent name="$PROJECT_DIR$/configs/__base__" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-eebebe6c2be4-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.15325.20" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a8aa468a-5fa5-414f-883b-c40aa6ccffd4" name="Changes" comment="" />
+      <created>1718975202914</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1718975202914</updated>
+    </task>
+    <servers />
+  </component>
+</project>
