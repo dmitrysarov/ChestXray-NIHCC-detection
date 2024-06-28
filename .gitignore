@@ -1,3 +1,5 @@
 /.venv/
 /work_dirs/
 /mlruns/
+__pycache__
+.DS_Store
