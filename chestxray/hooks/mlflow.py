@@ -20,7 +20,7 @@ from git import InvalidGitRepositoryError, Repo
 # from loguru import logger
 from mmengine import Config
 from mmengine.dist.utils import master_only
-from mmengine.hooks import LoggerHook
+from mmengine.hooks.logger_hook import DATA_BATCH, LoggerHook
 from mmengine.registry import HOOKS
 
 from chestxray.logger import get_logger
@@ -83,7 +83,7 @@ class MLflowHook(LoggerHook):
         ignore_keys=(),
         run_name="exp",
     ):
-        super().__init__(interval, ignore_last, reset_flag, by_epoch)
+        super().__init__(interval=interval, ignore_last=ignore_last)  # , reset_flag, by_epoch)
         self.log_model = log_model
         self.log_model_interval = log_model_interval
         self.save_last = save_last
@@ -102,9 +102,7 @@ class MLflowHook(LoggerHook):
                 minmax_log_metrics[f"{func.__name__}_{tag}"] = func(
                     [m.value for m in mlflow_client.get_metric_history(run_id, tag)]
                 )
-        print(minmax_log_metrics)
-        print(self.get_iter(runner))
-        self.ml.log_metrics(minmax_log_metrics, step=self.get_iter(runner))
+        self.ml.log_metrics(minmax_log_metrics, step=runner.iter + 1)
 
     def upload_artifacts_subproc(self, local_path: str, artifact_path: Optional[str] = None):
         proc = Process(target=self.ml.log_artifact, args=(local_path, artifact_path))
@@ -114,7 +112,8 @@ class MLflowHook(LoggerHook):
     def before_run(self, runner):
         super().before_run(runner)
         self.ml.start_run(run_name=self.run_name)
-        cfg = dict(Config.fromfile(osp.join(runner.work_dir, runner.meta["exp_name"])))
+        config_path = osp.join(osp.join(runner.log_dir, "vis_data", "config.py"))
+        cfg = dict(Config.fromfile(config_path))
 
         # hack to avoid mlflow limit of 100 keys
         for batch_params in batchify_dict(flatten(cfg, ignore_keys=self.ignore_keys), batch_size=100):
@@ -135,70 +134,7 @@ class MLflowHook(LoggerHook):
             print("no git repository")
 
         # save config as a file
-        config_path = osp.join(runner.work_dir, runner.meta["exp_name"])
-        unified_config_path = osp.join(runner.work_dir, "config.py")
-        shutil.copyfile(config_path, unified_config_path)
-        self.upload_artifacts_subproc(unified_config_path, artifact_path="")
-        if os.path.exists("meta"):
-            self.upload_artifacts_subproc("meta", artifact_path="")
-        if os.path.exists("mmcls_model"):
-            self.upload_artifacts_subproc("mmcls_model", artifact_path="")
-        if os.path.exists("mmcls_model"):
-            self.upload_artifacts_subproc("scripts", artifact_path="")
-
-        # save session_id with were used for training
-        # dvc_yaml_path = Path(os.environ["PROJECT_ROOT"]) / "dvc.yaml"
-        # with open(dvc_yaml_path, "r") as f:
-        #     yaml_data = yaml.load(f, Loader=yaml.SafeLoader)
-        # path = "/tmp"
-        # df = pd.read_parquet(
-        #     {k: v for item in yaml_data["vars"] for k, v in item.items()}["output_annotation"]["authentic"]
-        # )
-        # pd.DataFrame(df["session_id"].unique(), columns=["session_id"]).to_csv(
-        #     Path(path) / "session_id.csv", index=False
-        # )
-        # self.upload_artifacts_subproc(str(Path(path) / "session_id.csv"), artifact_path="")
-
-    @master_only
-    def log(self, runner):
-        tags = self.get_loggable_tags(runner)
-        if tags:
-            # rename val/0_ and val/1_ to val/val_ and val/subtrain_
-            for key in list(tags):
-                for old_key, new_key in zip(["val/0_", "val/1_"], ["val/val_", "val/subtrain_"]):
-                    if old_key in key:
-                        tags[key.replace(old_key, new_key)] = tags.pop(key)
-            # this part will be saved to mlflow as json files
-            complex_value_tags = {}
-            tensor_value_tags = {}
-            keys = list(tags.keys())
-            for tag in keys:
-                if isinstance(tags[tag], (MutableMapping, MutableSequence)):
-                    complex_value_tags[tag] = tags[tag]
-                    tags.pop(tag)
-                    continue
-                if isinstance(tags[tag], (torch.Tensor,)):
-                    tensor_value_tags[tag] = tags[tag]
-                    tags.pop(tag)
-            try:
-                for tag, val in complex_value_tags.items():
-                    output_path = osp.join(runner.work_dir, f"{tag.replace('/', '_')}_{runner.epoch + 1:04d}.json")
-                    with open(output_path, "w") as f:
-                        json.dump(val, f)
-                    self.upload_artifacts_subproc(output_path, artifact_path="classification_reports")
-                for tag, val in tensor_value_tags.items():
-                    output_path = osp.join(runner.work_dir, f"{tag.replace('/', '_')}_{runner.epoch + 1:04d}.txt")
-                    np.savetxt(output_path, val.numpy(), fmt="%.2f")
-                    self.upload_artifacts_subproc(output_path, artifact_path="confusion_matrix")
-            except Exception as e:
-                logger.error(e)
-            # and this part contains just metrics
-            try:
-                weights_norm = get_model_norm(runner.model)
-                tags.update({"weights_norm": weights_norm})
-                self.ml.log_metrics(tags, step=self.get_epoch(runner))
-            except Exception as e:
-                logger.error(e)
+        self.upload_artifacts_subproc(config_path, artifact_path="")
 
     @master_only
     def after_run(self, runner):
@@ -212,11 +148,45 @@ class MLflowHook(LoggerHook):
         self.ml.end_run()
 
     @master_only
+    def after_train_iter(
+        self, runner, batch_idx: int, data_batch: DATA_BATCH = None, outputs: Optional[dict] = None
+    ) -> None:
+        """Record logs after training iteration.
+
+        Args:
+            runner (Runner): The runner of the training process.
+            batch_idx (int): The index of the current batch in the train loop.
+            data_batch (dict tuple or list, optional): Data from dataloader.
+            outputs (dict, optional): Outputs from model.
+        """
+        # Print experiment name every n iterations.
+        if self.every_n_train_iters(runner, self.interval_exp_name) or (
+            self.end_of_epoch(runner.train_dataloader, batch_idx)
+        ):
+            exp_info = f"Exp name: {runner.experiment_name}"
+            runner.logger.info(exp_info)
+        if self.every_n_inner_iters(batch_idx, self.interval):
+            tag, log_str = runner.log_processor.get_log_after_iter(runner, batch_idx, "train")
+        elif self.end_of_epoch(runner.train_dataloader, batch_idx) and (
+            not self.ignore_last or len(runner.train_dataloader) <= self.interval
+        ):
+            # `runner.max_iters` may not be divisible by `self.interval`. if
+            # `self.ignore_last==True`, the log of remaining iterations will
+            # be recorded (Epoch [4][1000/1007], the logs of 998-1007
+            # iterations will be recorded).
+            tag, log_str = runner.log_processor.get_log_after_iter(runner, batch_idx, "train")
+        else:
+            return
+        runner.logger.info(log_str)
+        runner.visualizer.add_scalars(tag, step=runner.iter + 1, file_path=self.json_log_path)
+        self.ml.log_metrics(tag, step=runner.iter + 1)
+
+    @master_only
     def after_train_epoch(self, runner):
         super(MLflowHook, self).after_train_epoch(runner)
 
         if self.log_model:
-            if self.is_last_epoch(runner):
+            if self.is_last_train_epoch(runner):
                 best_checkpoints = sorted(
                     glob(osp.join(runner.work_dir, "best_*.pth")),
                     key=lambda x: int(re.findall("epoch_(\d+).pth", x)[0]),
@@ -237,7 +207,7 @@ class MLflowHook(LoggerHook):
                         "No best model found. Either your metirc for `save_best` is not specified or ill-defined."
                     )
             if self.save_last:
-                if self.is_last_epoch(runner):
+                if self.is_last_train_epoch(runner):
                     self.upload_artifacts_subproc(
                         osp.join(runner.work_dir, "latest.pth"),
                         artifact_path="checkpoints",

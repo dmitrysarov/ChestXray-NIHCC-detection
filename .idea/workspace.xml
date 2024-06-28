@@ -4,44 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a8aa468a-5fa5-414f-883b-c40aa6ccffd4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.lint/lint.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/chestxray/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/chestxray/datasets/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/chestxray/datasets/chessxray.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/chestxray/datasets/samplers/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/chestxray/datasets/samplers/class_balanced_sampler.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/chestxray/hooks/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/chestxray/hooks/mlflow.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/chestxray/logger.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/__base__/datasets/chestxray.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/__base__/default_runtime.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/__base__/schedules/schedule_1x.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/yolo/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/yolo/metafile.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/yolo/yolov3_d53_8xb8-320-273e_coco.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/yolo/yolov3_d53_8xb8-amp-ms-608-273e_coco.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/yolo/yolov3_d53_8xb8-ms-416-273e_coco.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/yolo/yolov3_d53_8xb8-ms-608-273e_coco.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/yolo/yolov3_mobilenetv2_8xb24-320-300e_coco.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/yolo/yolov3_mobilenetv2_8xb24-ms-416-300e_coco.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/yolox/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/yolox/metafile.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/yolox/yolox_l_8xb8-300e_coco.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/yolox/yolox_m_8xb8-300e_coco.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/yolox/yolox_nano_8xb8-300e_coco.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/yolox/yolox_s_8xb8-300e_coco.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/yolox/yolox_tiny_8xb8-300e_coco.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/yolox/yolox_tta.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/yolox/yolox_x_8xb8-300e_coco.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/install_requirements.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements.in" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements_after.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/train_old.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/setup.cfg" afterDir="false" />
+    <list default="true" id="a8aa468a-5fa5-414f-883b-c40aa6ccffd4" name="Changes" comment="initial">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/train.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +27,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="NamedScopeManager">
-    <scope name="mmdet" pattern="ext[Python 3.9 (chestxray)]:mmdet/*||ext[Python 3.9 (chestxray)]:mmengine/*" />
+    <scope name="Unnamed" pattern="ext:.venv/*||file[chestxray]:*||ext:*" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
@@ -75,26 +40,111 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Python.download_data.executor": "Run",
+    "Python.train.executor": "Debug",
+    "Python.yolox_s_8xb8-300e_coco.executor": "Debug",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "/Users/dmitry/Projects/dantiai/chestxray",
-    "settings.editor.selected.configurable": "watcher.settings"
+    "last_opened_file_path": "/Users/dmitry/Projects/dantiai/chestxray/configs/yolox",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/configs/yolox" />
+      <recent name="$PROJECT_DIR$/chestxray/models" />
+      <recent name="$PROJECT_DIR$/EDA" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/scripts" />
-      <recent name="$PROJECT_DIR$/chestxray" />
-      <recent name="$PROJECT_DIR$/chestxray/datasets" />
-      <recent name="$PROJECT_DIR$/chestxray/hooks" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/chestxray" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/configs" />
       <recent name="$PROJECT_DIR$/configs/__base__" />
       <recent name="$PROJECT_DIR$" />
     </key>
+  </component>
+  <component name="RunManager" selected="Python.yolox_s_8xb8-300e_coco">
+    <configuration name="download_data" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="chestxray" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/scripts" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/scripts/download_data.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="train" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="chestxray" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DEBUG" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.9 (chestxray)" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/scripts/train.py" />
+      <option name="PARAMETERS" value="configs/yolox/yolox_s_8xb8-300e_coco.py --run-name test_chestXray" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="yolox_s_8xb8-300e_coco" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="chestxray" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/configs/yolox" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/configs/yolox/yolox_s_8xb8-300e_coco.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.train" />
+      <item itemvalue="Python.yolox_s_8xb8-300e_coco" />
+      <item itemvalue="Python.download_data" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.yolox_s_8xb8-300e_coco" />
+        <item itemvalue="Python.download_data" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -112,6 +162,115 @@
       <option name="presentableId" value="Default" />
       <updated>1718975202914</updated>
     </task>
+    <task id="LOCAL-00001" summary="initial">
+      <option name="closed" value="true" />
+      <created>1719611219067</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1719611219067</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="initial" />
+    <option name="LAST_COMMIT_MESSAGE" value="initial" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint type="python-line">
+          <url>file://$PROJECT_DIR$/.venv/lib/python3.9/site-packages/mmdet/models/dense_heads/yolox_head.py</url>
+          <line>487</line>
+          <option name="timeStamp" value="75" />
+        </line-breakpoint>
+        <line-breakpoint type="python-line">
+          <url>file://$PROJECT_DIR$/.venv/lib/python3.9/site-packages/mmdet/models/dense_heads/yolox_head.py</url>
+          <line>323</line>
+          <option name="timeStamp" value="77" />
+        </line-breakpoint>
+        <line-breakpoint type="python-line">
+          <url>file://$PROJECT_DIR$/.venv/lib/python3.9/site-packages/mmdet/models/task_modules/assigners/sim_ota_assigner.py</url>
+          <line>129</line>
+          <option name="timeStamp" value="79" />
+        </line-breakpoint>
+        <line-breakpoint type="python-line">
+          <url>file://$PROJECT_DIR$/.venv/lib/python3.9/site-packages/mmdet/models/task_modules/assigners/sim_ota_assigner.py</url>
+          <line>95</line>
+          <option name="timeStamp" value="80" />
+        </line-breakpoint>
+        <line-breakpoint type="python-line">
+          <url>file://$PROJECT_DIR$/.venv/lib/python3.9/site-packages/mmdet/models/task_modules/assigners/sim_ota_assigner.py</url>
+          <line>166</line>
+          <option name="timeStamp" value="83" />
+        </line-breakpoint>
+        <line-breakpoint type="python-line">
+          <url>file://$PROJECT_DIR$/.venv/lib/python3.9/site-packages/mmdet/models/dense_heads/yolox_head.py</url>
+          <line>478</line>
+          <option name="timeStamp" value="86" />
+        </line-breakpoint>
+        <line-breakpoint type="python-line">
+          <url>file://$PROJECT_DIR$/.venv/lib/python3.9/site-packages/mmdet/models/task_modules/assigners/sim_ota_assigner.py</url>
+          <line>202</line>
+          <option name="timeStamp" value="87" />
+        </line-breakpoint>
+        <line-breakpoint type="python-line">
+          <url>file://$PROJECT_DIR$/.venv/lib/python3.9/site-packages/mmdet/models/losses/cross_entropy_loss.py</url>
+          <line>291</line>
+          <option name="timeStamp" value="88" />
+        </line-breakpoint>
+        <line-breakpoint type="python-line">
+          <url>file://$PROJECT_DIR$/.venv/lib/python3.9/site-packages/mmdet/models/dense_heads/yolox_head.py</url>
+          <line>304</line>
+          <option name="timeStamp" value="92" />
+        </line-breakpoint>
+        <line-breakpoint type="python-line">
+          <url>file://$PROJECT_DIR$/.venv/lib/python3.9/site-packages/mmengine/runner/loops.py</url>
+          <line>394</line>
+          <option name="timeStamp" value="95" />
+        </line-breakpoint>
+        <line-breakpoint type="python-line">
+          <url>file://$PROJECT_DIR$/chestxray/modules/evaluator.py</url>
+          <line>20</line>
+          <option name="timeStamp" value="97" />
+        </line-breakpoint>
+        <line-breakpoint type="python-line">
+          <url>file://$PROJECT_DIR$/.venv/lib/python3.9/site-packages/mmengine/runner/loops.py</url>
+          <line>131</line>
+          <option name="timeStamp" value="99" />
+        </line-breakpoint>
+        <line-breakpoint type="python-line">
+          <url>file://$PROJECT_DIR$/chestxray/models/yolox.py</url>
+          <line>97</line>
+          <option name="timeStamp" value="100" />
+        </line-breakpoint>
+        <line-breakpoint type="python-line">
+          <url>file://$PROJECT_DIR$/.venv/lib/python3.9/site-packages/mmdet/models/dense_heads/yolox_head.py</url>
+          <line>476</line>
+          <option name="timeStamp" value="101" />
+        </line-breakpoint>
+      </breakpoints>
+      <breakpoints-defaults>
+        <breakpoint type="python-line" />
+      </breakpoints-defaults>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="outputs" />
+        <watch expression="losses" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

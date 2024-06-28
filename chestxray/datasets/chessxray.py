@@ -36,7 +36,12 @@ class ChessXray(BaseDetDataset):
             list[dict]: A list of annotation.
         """  # noqa: E501
         annotations = pd.read_csv(self.ann_file)
-        metainfo = ({"dataset_type": "test_dataset", "task_name": "test_task"},)
+        metainfo = {
+            "dataset_type": "test_dataset",
+            "task_name": "test_task",
+            "classes": list(set(annotations["class_id"])),
+        }
+
         for k, v in metainfo.items():
             self._metainfo.setdefault(k, v)
 
@@ -46,12 +51,14 @@ class ChessXray(BaseDetDataset):
             data_list.append(
                 {
                     "img_path": path,
+                    "img_id": path,  # for coco metrics
                     "height": group.iloc[0]["height"],
                     "width": group.iloc[0]["width"],
                     "instances": [
                         {
-                            "bbox": [item["Bbox [x"], item["y"], item["w"], item["h]"]],
+                            "bbox": [item["Bbox [x"], item["y"], item["Bbox [x"] + item["w"], item["y"] + item["h]"]],
                             "bbox_label": item["class_id"],
+                            "ignore_flag": False,
                         }
                         for _, item in group.iterrows()
                     ],

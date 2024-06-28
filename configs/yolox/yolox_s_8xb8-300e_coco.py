@@ -1,6 +1,8 @@
 _base_ = ["../_base_/schedules/schedule_1x.py", "../_base_/default_runtime.py", "./yolox_tta.py"]
-
+BATCH_SIZE = 16
 img_scale = (640, 640)  # width, height
+# root_path = "/kaggle/working"
+root_path = "/Users/dmitry/Projects/dantiai/data"
 
 # model settings
 model = dict(
@@ -34,7 +36,7 @@ model = dict(
     ),
     bbox_head=dict(
         type="YOLOXHead",
-        num_classes=80,
+        num_classes=8,
         in_channels=128,
         feat_channels=128,
         stacked_convs=2,
@@ -47,15 +49,15 @@ model = dict(
         loss_obj=dict(type="CrossEntropyLoss", use_sigmoid=True, reduction="sum", loss_weight=1.0),
         loss_l1=dict(type="L1Loss", reduction="sum", loss_weight=1.0),
     ),
-    train_cfg=dict(assigner=dict(type="SimOTAAssigner", center_radius=2.5)),
+    train_cfg=dict(assigner=dict(type="SimOTAAssigner", center_radius=2.5, candidate_topk=100)),
     # In order to align the source code, the threshold of the val phase is
     # 0.01, and the threshold of the test phase is 0.001.
     test_cfg=dict(score_thr=0.01, nms=dict(type="nms", iou_threshold=0.65)),
 )
 
 # dataset settings
-data_root = "data/coco/"
-dataset_type = "CocoDataset"
+# data_root = "data/coco/"
+dataset_type = "ChessXray"
 
 # Example to use different file client
 # Method 1: simply set the data root and let the file I/O module
@@ -105,9 +107,7 @@ train_dataset = dict(
     type="MultiImageMixDataset",
     dataset=dict(
         type=dataset_type,
-        data_root=data_root,
-        ann_file="annotations/instances_train2017.json",
-        data_prefix=dict(img="train2017/"),
+        ann_file=f"{root_path}/BBox_List_2017_train.csv",
         pipeline=[
             dict(type="LoadImageFromFile", backend_args=backend_args),
             dict(type="LoadAnnotations", with_bbox=True),
@@ -127,52 +127,69 @@ test_pipeline = [
 ]
 
 train_dataloader = dict(
-    batch_size=8,
+    batch_size=BATCH_SIZE,
     num_workers=4,
     persistent_workers=True,
     sampler=dict(type="DefaultSampler", shuffle=True),
     dataset=train_dataset,
 )
 val_dataloader = dict(
-    batch_size=8,
+    batch_size=BATCH_SIZE,
     num_workers=4,
     persistent_workers=True,
     drop_last=False,
     sampler=dict(type="DefaultSampler", shuffle=False),
     dataset=dict(
         type=dataset_type,
-        data_root=data_root,
-        ann_file="annotations/instances_val2017.json",
-        data_prefix=dict(img="val2017/"),
+        ann_file=f"{root_path}/BBox_List_2017_val.csv",
         test_mode=True,
         pipeline=test_pipeline,
         backend_args=backend_args,
     ),
 )
-test_dataloader = val_dataloader
+test_dataloader = dict(
+    batch_size=BATCH_SIZE,
+    num_workers=4,
+    persistent_workers=True,
+    drop_last=False,
+    sampler=dict(type="DefaultSampler", shuffle=False),
+    dataset=dict(
+        type=dataset_type,
+        ann_file=f"{root_path}/BBox_List_2017_test.csv",
+        test_mode=True,
+        pipeline=test_pipeline,
+        backend_args=backend_args,
+    ),
+)
 
 val_evaluator = dict(
     type="CocoMetric",
-    ann_file=data_root + "annotations/instances_val2017.json",
+    # ann_file=f"{root_path}/BBox_List_2017_val.csv",
     metric="bbox",
     backend_args=backend_args,
 )
-test_evaluator = val_evaluator
+test_evaluator = dict(
+    type="CocoMetric",
+    # ann_file=f"{root_path}/BBox_List_2017_test.csv",
+    metric="bbox",
+    backend_args=backend_args,
+)
 
 # training settings
 max_epochs = 300
 num_last_epochs = 15
-interval = 10
+interval = 1
 
 train_cfg = dict(max_epochs=max_epochs, val_interval=interval)
 
 # optimizer
 # default 8 gpu
-base_lr = 0.01
+base_lr = 0.01 / 4
 optim_wrapper = dict(
     type="OptimWrapper",
     optimizer=dict(type="SGD", lr=base_lr, momentum=0.9, weight_decay=5e-4, nesterov=True),
     paramwise_cfg=dict(norm_decay_mult=0.0, bias_decay_mult=0.0),
+    # clip_grad=dict(type="value", clip_value=1000.0),
 )
 
 # learning rate
@@ -213,9 +230,17 @@ custom_hooks = [
     dict(type="YOLOXModeSwitchHook", num_last_epochs=num_last_epochs, priority=48),
     dict(type="SyncNormHook", priority=48),
     dict(type="EMAHook", ema_type="ExpMomentumEMA", momentum=0.0001, update_buffers=True, priority=49),
+    dict(
+        type="MLflowHook",
+        interval=int(1e10),  # to log only at the end of epoch
+        log_model=True,
+        save_last=True,
+        log_model_interval=100,
+        priority="VERY_LOW",
+    ),
 ]
 
 # NOTE: `auto_scale_lr` is for automatically scaling LR,
 # USER SHOULD NOT CHANGE ITS VALUES.
 # base_batch_size = (8 GPUs) x (8 samples per GPU)
-auto_scale_lr = dict(base_batch_size=64)
+auto_scale_lr = dict(base_batch_size=BATCH_SIZE)
