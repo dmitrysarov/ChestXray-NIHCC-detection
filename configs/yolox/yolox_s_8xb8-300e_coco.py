@@ -1,5 +1,5 @@
 _base_ = ["../_base_/schedules/schedule_1x.py", "../_base_/default_runtime.py", "./yolox_tta.py"]
-BATCH_SIZE = 16
+BATCH_SIZE = 8
 img_scale = (640, 640)  # width, height
 # root_path = "/kaggle/working"
 root_path = "/Users/dmitry/Projects/dantiai/data"
