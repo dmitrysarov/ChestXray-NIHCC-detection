@@ -56,7 +56,12 @@ class ChessXray(BaseDetDataset):
                     "width": group.iloc[0]["width"],
                     "instances": [
                         {
-                            "bbox": [item["Bbox [x"], item["y"], item["Bbox [x"] + item["w"], item["y"] + item["h]"]],
+                            "bbox": [
+                                item["Bbox [x"] / item["width"],
+                                item["y"] / item["height"],
+                                (item["Bbox [x"] + item["w"]) / item["width"],
+                                (item["y"] + item["h]"]) / item["height"],
+                            ],
                             "bbox_label": item["class_id"],
                             "ignore_flag": False,
                         }
