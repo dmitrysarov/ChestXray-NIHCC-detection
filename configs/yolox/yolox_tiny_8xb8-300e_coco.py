@@ -13,15 +13,15 @@ model = dict(
 img_scale = (640, 640)  # width, height
 
 train_pipeline = [
-    # dict(type="Mosaic", img_scale=img_scale, pad_val=114.0),
-    # dict(
-    #     type="RandomAffine",
-    #     scaling_ratio_range=(0.5, 1.5),
-    #     # img_scale is (width, height)
-    #     border=(-img_scale[0] // 2, -img_scale[1] // 2),
-    # ),
-    # dict(type="YOLOXHSVRandomAug"),
-    # dict(type="RandomFlip", prob=0.5),
+    dict(type="Mosaic", img_scale=img_scale, pad_val=114.0),
+    dict(
+        type="RandomAffine",
+        scaling_ratio_range=(0.5, 1.5),
+        # img_scale is (width, height)
+        border=(-img_scale[0] // 2, -img_scale[1] // 2),
+    ),
+    dict(type="YOLOXHSVRandomAug"),
+    dict(type="RandomFlip", prob=0.5),
     # Resize and Pad are for the last 15 epochs when Mosaic and
     # RandomAffine are closed by YOLOXModeSwitchHook.
     dict(type="Resize", scale=img_scale, keep_ratio=True),
