@@ -106,6 +106,7 @@ train_dataset = dict(
     dataset=dict(
         type=dataset_type,
         data_root=data_root,
+        metainfo=dict(classes=[]),
         # ann_file="BBox_List_2017_train.json",
         ann_file="BBox_List_2017_val.json",
         data_prefix=dict(img="images1000/"),
