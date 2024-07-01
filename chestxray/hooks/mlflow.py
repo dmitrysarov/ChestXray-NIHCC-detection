@@ -266,7 +266,9 @@ class MLflowHook(LoggerHook):
                         artifact_path="checkpoints",
                     )
             if self.every_n_epochs(runner, self.log_model_interval):
-                time.sleep(10)
+                import ipdb
+
+                ipdb.set_trace()
                 self.upload_artifacts_subproc(
                     osp.join(runner.work_dir, f"epoch_{runner.epoch + 1}.pth"), artifact_path="checkpoints"
                 )
