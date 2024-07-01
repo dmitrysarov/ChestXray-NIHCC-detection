@@ -197,7 +197,7 @@ class MLflowHook(LoggerHook):
                 metrics, and the values are corresponding results.
         """
         tag, log_str = runner.log_processor.get_log_after_epoch(runner, len(runner.val_dataloader), "val")
-        self.ml.log_metrics(tag, step=runner.iter + 1)
+        self.ml.log_metrics(tag, step=runner.epoch + 1)
         runner.logger.info(log_str)
         if self.log_metric_by_epoch:
             # Accessing the epoch attribute of the runner will trigger
@@ -207,13 +207,13 @@ class MLflowHook(LoggerHook):
             if isinstance(runner._train_loop, dict) or runner._train_loop is None:
                 epoch = 0
             else:
-                epoch = runner.epoch
+                epoch = runner.epoch + 1
             runner.visualizer.add_scalars(tag, step=epoch, file_path=self.json_log_path)
         else:
             if isinstance(runner._train_loop, dict) or runner._train_loop is None:
                 iter = 0
             else:
-                iter = runner.iter
+                iter = runner.epoch + 1
             runner.visualizer.add_scalars(tag, step=iter, file_path=self.json_log_path)
 
     @master_only
@@ -230,7 +230,7 @@ class MLflowHook(LoggerHook):
         tag, log_str = runner.log_processor.get_log_after_epoch(
             runner, len(runner.test_dataloader), "test", with_non_scalar=True
         )
-        self.ml.log_metrics(tag, step=runner.iter + 1)
+        self.ml.log_metrics(tag, step=runner.epoch + 1)
         runner.logger.info(log_str)
         dump(self._process_tags(tag), osp.join(runner.log_dir, self.json_log_path))  # type: ignore
 

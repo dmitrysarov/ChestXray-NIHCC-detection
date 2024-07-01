@@ -241,7 +241,7 @@ custom_hooks = [
     dict(type="YOLOXModeSwitchHook", num_last_epochs=num_last_epochs, priority=48),
     dict(type="SyncNormHook", priority=48),
     dict(type="EMAHook", ema_type="ExpMomentumEMA", momentum=0.0001, update_buffers=True, priority=49),
-    dict(type="MLflowHook", log_model_interval=10),
+    dict(type="MLflowHook", log_model_interval=interval, interval=interval),
 ]
 
 # NOTE: `auto_scale_lr` is for automatically scaling LR,
