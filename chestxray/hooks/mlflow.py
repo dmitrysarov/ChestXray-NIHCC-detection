@@ -186,37 +186,6 @@ class MLflowHook(LoggerHook):
         self.ml.log_metrics(tag, step=runner.iter + 1)
 
     @master_only
-    def after_val_epoch(self, runner, metrics: Optional[Dict[str, float]] = None) -> None:
-        """All subclasses should override this method, if they need any
-        operations after each validation epoch.
-
-        Args:
-            runner (Runner): The runner of the validation process.
-            metrics (Dict[str, float], optional): Evaluation results of all
-                metrics on validation dataset. The keys are the names of the
-                metrics, and the values are corresponding results.
-        """
-        tag, log_str = runner.log_processor.get_log_after_epoch(runner, len(runner.val_dataloader), "val")
-        self.ml.log_metrics(tag, step=runner.epoch + 1)
-        runner.logger.info(log_str)
-        if self.log_metric_by_epoch:
-            # Accessing the epoch attribute of the runner will trigger
-            # the construction of the train_loop. Therefore, to avoid
-            # triggering the construction of the train_loop during
-            # validation, check before accessing the epoch.
-            if isinstance(runner._train_loop, dict) or runner._train_loop is None:
-                epoch = 0
-            else:
-                epoch = runner.epoch + 1
-            runner.visualizer.add_scalars(tag, step=epoch, file_path=self.json_log_path)
-        else:
-            if isinstance(runner._train_loop, dict) or runner._train_loop is None:
-                iter = 0
-            else:
-                iter = runner.epoch + 1
-            runner.visualizer.add_scalars(tag, step=iter, file_path=self.json_log_path)
-
-    @master_only
     def after_test_epoch(self, runner, metrics: Optional[Dict[str, float]] = None) -> None:
         """All subclasses should override this method, if they need any
         operations after each test epoch.
@@ -238,7 +207,28 @@ class MLflowHook(LoggerHook):
     def after_val_epoch(self, runner, metrics: Optional[Dict[str, float]] = None):
         super(MLflowHook, self).after_val_epoch(runner)
 
+        tag, log_str = runner.log_processor.get_log_after_epoch(runner, len(runner.val_dataloader), "val")
+        self.ml.log_metrics(tag, step=runner.epoch + 1)
+        runner.logger.info(log_str)
+        if self.log_metric_by_epoch:
+            # Accessing the epoch attribute of the runner will trigger
+            # the construction of the train_loop. Therefore, to avoid
+            # triggering the construction of the train_loop during
+            # validation, check before accessing the epoch.
+            if isinstance(runner._train_loop, dict) or runner._train_loop is None:
+                epoch = 0
+            else:
+                epoch = runner.epoch + 1
+            runner.visualizer.add_scalars(tag, step=epoch, file_path=self.json_log_path)
+        else:
+            if isinstance(runner._train_loop, dict) or runner._train_loop is None:
+                iter = 0
+            else:
+                iter = runner.epoch + 1
+            runner.visualizer.add_scalars(tag, step=iter, file_path=self.json_log_path)
+
         if self.log_model:
+
             if self.is_last_train_epoch(runner):
                 best_checkpoints = sorted(
                     glob(osp.join(runner.work_dir, "best_*.pth")),
