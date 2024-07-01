@@ -256,7 +256,7 @@ class MLflowHook(LoggerHook):
                         artifact_path="checkpoints",
                     )
             if self.every_n_epochs(runner, self.log_model_interval):
-                self.upload_artifacts_subproc(
+                self.ml.log_artifact(
                     osp.join(runner.work_dir, f"epoch_{runner.epoch}.pth"), artifact_path="checkpoints"
                 )
                 for img_file in (Path(runner.log_dir) / "vis_data" / "vis_image").rglob("*.png"):
