@@ -6,6 +6,7 @@ import re
 import shutil
 import time
 from collections.abc import MutableMapping, MutableSequence
+from functools import partial
 from glob import glob
 from multiprocessing import Process
 from pathlib import Path
@@ -107,13 +108,15 @@ class MLflowHook(LoggerHook):
         self.ml.log_metrics(minmax_log_metrics, step=runner.iter + 1)
 
     def upload_artifacts_subproc(self, local_path: str, artifact_path: Optional[str] = None):
-        proc = Process(target=self.ml.log_artifact, args=(local_path, artifact_path))
+        partial_log = partial(self.ml.log_artifact, local_path, artifact_path, run_id=self.run_id)
+        proc = Process(target=partial_log, args=(local_path, artifact_path))
         proc.start()
 
     @master_only
     def before_run(self, runner):
         super().before_run(runner)
         self.ml.start_run(run_name=self.run_name)
+        self.run_id = self.ml.active_run().info.run_id
         config_path = osp.join(osp.join(runner.log_dir, "vis_data", "config.py"))
         cfg = dict(Config.fromfile(config_path))
 
@@ -136,7 +139,7 @@ class MLflowHook(LoggerHook):
             print("no git repository")
 
         # save config as a file
-        self.upload_artifacts_subproc(config_path, artifact_path="")
+        self.ml.log_artifact(config_path, artifact_path="")
 
     @master_only
     def after_run(self, runner):
@@ -200,8 +203,6 @@ class MLflowHook(LoggerHook):
             runner, len(runner.test_dataloader), "test", with_non_scalar=True
         )
         self.ml.log_metrics(tag, step=runner.epoch + 1)
-        runner.logger.info(log_str)
-        dump(self._process_tags(tag), osp.join(runner.log_dir, self.json_log_path))  # type: ignore
 
     @master_only
     def after_val_epoch(self, runner, metrics: Optional[Dict[str, float]] = None):
@@ -210,22 +211,6 @@ class MLflowHook(LoggerHook):
         tag, log_str = runner.log_processor.get_log_after_epoch(runner, len(runner.val_dataloader), "val")
         self.ml.log_metrics(tag, step=runner.epoch)
         runner.logger.info(log_str)
-        if self.log_metric_by_epoch:
-            # Accessing the epoch attribute of the runner will trigger
-            # the construction of the train_loop. Therefore, to avoid
-            # triggering the construction of the train_loop during
-            # validation, check before accessing the epoch.
-            if isinstance(runner._train_loop, dict) or runner._train_loop is None:
-                epoch = 0
-            else:
-                epoch = runner.epoch
-            runner.visualizer.add_scalars(tag, step=epoch, file_path=self.json_log_path)
-        else:
-            if isinstance(runner._train_loop, dict) or runner._train_loop is None:
-                iter = 0
-            else:
-                iter = runner.epoch
-            runner.visualizer.add_scalars(tag, step=iter, file_path=self.json_log_path)
 
         if self.log_model:
 
@@ -256,9 +241,11 @@ class MLflowHook(LoggerHook):
                         artifact_path="checkpoints",
                     )
             if self.every_n_epochs(runner, self.log_model_interval):
-                self.ml.log_artifact(
-                    osp.join(runner.work_dir, f"epoch_{runner.epoch}.pth"), artifact_path="checkpoints"
+                print("uploading model")
+                self.upload_artifacts_subproc(
+                    osp.join(runner.work_dir, f"epoch_{runner.epoch}.pth"),
+                    artifact_path="checkpoints",
                 )
                 for img_file in (Path(runner.log_dir) / "vis_data" / "vis_image").rglob("*.png"):
-                    self.ml.log_artifact(str(img_file), artifact_path="pred_annotation")
+                    self.ml.log_artifact(str(img_file), artifact_path="pred_annotation", run_id=self.run_id)
                     os.remove(str(img_file))
