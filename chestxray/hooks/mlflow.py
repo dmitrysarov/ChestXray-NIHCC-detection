@@ -235,8 +235,8 @@ class MLflowHook(LoggerHook):
         dump(self._process_tags(tag), osp.join(runner.log_dir, self.json_log_path))  # type: ignore
 
     @master_only
-    def after_train_epoch(self, runner):
-        super(MLflowHook, self).after_train_epoch(runner)
+    def after_val_epoch(self, runner):
+        super(MLflowHook, self).after_val_epoch(runner)
 
         if self.log_model:
             if self.is_last_train_epoch(runner):
@@ -266,9 +266,9 @@ class MLflowHook(LoggerHook):
                         artifact_path="checkpoints",
                     )
             if self.every_n_epochs(runner, self.log_model_interval):
-                import ipdb
-
-                ipdb.set_trace()
                 self.upload_artifacts_subproc(
                     osp.join(runner.work_dir, f"epoch_{runner.epoch + 1}.pth"), artifact_path="checkpoints"
                 )
+                for img_file in (Path(runner.log_dir) / "vis_data" / "vis_image").rglob("*.png"):
+                    self.ml.log_artifact(str(img_file), artifact_path="pred_annotation")
+                    os.remove(str(img_file))
