@@ -208,7 +208,7 @@ class MLflowHook(LoggerHook):
         super(MLflowHook, self).after_val_epoch(runner)
 
         tag, log_str = runner.log_processor.get_log_after_epoch(runner, len(runner.val_dataloader), "val")
-        self.ml.log_metrics(tag, step=runner.epoch + 1)
+        self.ml.log_metrics(tag, step=runner.epoch)
         runner.logger.info(log_str)
         if self.log_metric_by_epoch:
             # Accessing the epoch attribute of the runner will trigger
@@ -218,13 +218,13 @@ class MLflowHook(LoggerHook):
             if isinstance(runner._train_loop, dict) or runner._train_loop is None:
                 epoch = 0
             else:
-                epoch = runner.epoch + 1
+                epoch = runner.epoch
             runner.visualizer.add_scalars(tag, step=epoch, file_path=self.json_log_path)
         else:
             if isinstance(runner._train_loop, dict) or runner._train_loop is None:
                 iter = 0
             else:
-                iter = runner.epoch + 1
+                iter = runner.epoch
             runner.visualizer.add_scalars(tag, step=iter, file_path=self.json_log_path)
 
         if self.log_model:
@@ -257,7 +257,7 @@ class MLflowHook(LoggerHook):
                     )
             if self.every_n_epochs(runner, self.log_model_interval):
                 self.upload_artifacts_subproc(
-                    osp.join(runner.work_dir, f"epoch_{runner.epoch + 1}.pth"), artifact_path="checkpoints"
+                    osp.join(runner.work_dir, f"epoch_{runner.epoch}.pth"), artifact_path="checkpoints"
                 )
                 for img_file in (Path(runner.log_dir) / "vis_data" / "vis_image").rglob("*.png"):
                     self.ml.log_artifact(str(img_file), artifact_path="pred_annotation")
