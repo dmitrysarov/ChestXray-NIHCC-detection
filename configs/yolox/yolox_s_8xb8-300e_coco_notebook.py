@@ -174,7 +174,7 @@ train_cfg = dict(max_epochs=max_epochs, val_interval=interval)
 
 # optimizer
 # default 8 gpu
-base_lr = 0.001
+base_lr = 0.01
 optim_wrapper = dict(
     type="OptimWrapper",
     optimizer=dict(type="SGD", lr=base_lr, momentum=0.9, weight_decay=5e-4, nesterov=True),
@@ -219,6 +219,7 @@ custom_hooks = [
     dict(type="YOLOXModeSwitchHook", num_last_epochs=num_last_epochs, priority=48),
     dict(type="SyncNormHook", priority=48),
     dict(type="EMAHook", ema_type="ExpMomentumEMA", momentum=0.0001, update_buffers=True, priority=49),
+    dict(type="MLflowHook"),
 ]
 
 # NOTE: `auto_scale_lr` is for automatically scaling LR,
