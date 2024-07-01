@@ -68,7 +68,7 @@ def main():
         check_git_clarity()
     args = parse_args()
     os.environ["MLFLOW_TRACKING_URI"] = "http://ec2-3-252-209-118.eu-west-1.compute.amazonaws.com:5000/"
-    os.environ["MLFLOW_EXPERIMENT_NAME"] = "chestxray"
+    # os.environ["MLFLOW_EXPERIMENT_NAME"] = "chestxray"
     os.environ["OMP_NUM_THREADS"] = "1"
     os.environ["MKL_NUM_THREADS"] = "1"
     # Reduce the number of repeated compilations and improve
