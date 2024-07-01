@@ -98,7 +98,7 @@ def main():
     if cfg.get("default_hooks", None):
         for key, value in cfg["default_hooks"].items():
             if cfg["default_hooks"][key].get("type", None) == "DetVisualizationHook":
-                cfg["default_hooks"][key]["test_out_dir"] = os.path.join(args.run_name.work_dir, "prediction_images")
+                cfg["default_hooks"][key]["test_out_dir"] = os.path.join(cfg.work_dir, "prediction_images")
 
     # enable automatic-mixed-precision training
     if args.amp is True:
