@@ -235,7 +235,7 @@ class MLflowHook(LoggerHook):
         dump(self._process_tags(tag), osp.join(runner.log_dir, self.json_log_path))  # type: ignore
 
     @master_only
-    def after_val_epoch(self, runner):
+    def after_val_epoch(self, runner, metrics: Optional[Dict[str, float]] = None):
         super(MLflowHook, self).after_val_epoch(runner)
 
         if self.log_model:
