@@ -4,7 +4,9 @@
 import argparse
 import os
 import os.path as osp
+import sys
 
+import torch
 from mmdet.utils import setup_cache_size_limit_of_dynamo
 from mmengine.config import Config, DictAction
 from mmengine.registry import RUNNERS
@@ -108,7 +110,7 @@ def main():
                 '"auto_scale_lr.base_batch_size" in your'
                 " configuration file."
             )
-
+    cfg.load_from = "yolox_tiny_8x8_300e_coco_20211124_171234-b4047906.pth"
     # resume is determined in this priority: resume from > auto_resume
     if args.resume == "auto":
         cfg.resume = True
@@ -126,7 +128,16 @@ def main():
         # if 'runner_type' is set in the cfg
         runner = RUNNERS.build(cfg)
 
-    # start training
+    def inspect_gradient(grad):
+        # print(grad)  # print gradient
+        if torch.isnan(grad).any():
+            print("NaN value found in gradient. Stopping training...")
+
+    # Register hook for each parameter in your model
+    for param in runner.model.parameters():
+        param.register_hook(inspect_gradient)
+
+        # start training
     runner.train()
 
 

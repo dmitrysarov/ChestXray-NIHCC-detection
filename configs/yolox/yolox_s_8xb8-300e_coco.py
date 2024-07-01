@@ -7,6 +7,8 @@ model = dict(
     type="YOLOX",
     data_preprocessor=dict(
         type="DetDataPreprocessor",
+        mean=[122.48, 122.48, 122.48],
+        std=[64.48, 64.48, 64.48],
         pad_size_divisor=32,
         batch_augments=[
             dict(type="BatchSyncRandomResize", random_size_range=(480, 800), size_divisor=32, interval=10)
@@ -54,7 +56,9 @@ model = dict(
 )
 
 # dataset settings
+# data_root = "data/coco/"
 data_root = "../data/"
+
 dataset_type = "CocoDataset"
 
 # Example to use different file client
@@ -73,7 +77,7 @@ dataset_type = "CocoDataset"
 backend_args = None
 
 train_pipeline = [
-    dict(type="Mosaic", img_scale=img_scale, pad_val=114.0),
+    dict(type="Mosaic", img_scale=img_scale, pad_val=122.0),
     dict(
         type="RandomAffine",
         scaling_ratio_range=(0.1, 2),
@@ -94,7 +98,7 @@ train_pipeline = [
         pad_to_square=True,
         # If the image is three-channel, the pad value needs
         # to be set separately for each channel.
-        pad_val=dict(img=(114.0, 114.0, 114.0)),
+        pad_val=dict(img=(122.0, 122.0, 122.0)),
     ),
     dict(type="FilterAnnotations", min_gt_bbox_wh=(1, 1), keep_empty=False),
     dict(type="PackDetInputs"),
@@ -105,11 +109,10 @@ train_dataset = dict(
     type="MultiImageMixDataset",
     dataset=dict(
         type=dataset_type,
-        data_root=data_root,
         metainfo=dict(classes=[]),
-        # ann_file="BBox_List_2017_train.json",
-        ann_file="BBox_List_2017_val.json",
-        data_prefix=dict(img="images1000/"),
+        data_root=data_root,
+        ann_file="BBox_List_2017_train.json",
+        data_prefix=dict(img="../data/images1000/"),
         pipeline=[
             dict(type="LoadImageFromFile", backend_args=backend_args),
             dict(type="LoadAnnotations", with_bbox=True),
@@ -123,20 +126,20 @@ train_dataset = dict(
 test_pipeline = [
     dict(type="LoadImageFromFile", backend_args=backend_args),
     dict(type="Resize", scale=img_scale, keep_ratio=True),
-    dict(type="Pad", pad_to_square=True, pad_val=dict(img=(114.0, 114.0, 114.0))),
+    dict(type="Pad", pad_to_square=True, pad_val=dict(img=(122.0, 122.0, 122.0))),
     dict(type="LoadAnnotations", with_bbox=True),
     dict(type="PackDetInputs", meta_keys=("img_id", "img_path", "ori_shape", "img_shape", "scale_factor")),
 ]
 
 train_dataloader = dict(
-    batch_size=8,
+    batch_size=16,
     num_workers=4,
     persistent_workers=True,
     sampler=dict(type="DefaultSampler", shuffle=True),
     dataset=train_dataset,
 )
 val_dataloader = dict(
-    batch_size=8,
+    batch_size=16,
     num_workers=4,
     persistent_workers=True,
     drop_last=False,
@@ -144,8 +147,9 @@ val_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         data_root=data_root,
+        metainfo=dict(classes=[]),
         ann_file="BBox_List_2017_val.json",
-        data_prefix=dict(img="images1000/"),
+        data_prefix=dict(img="../data/images1000/"),
         test_mode=True,
         pipeline=test_pipeline,
         backend_args=backend_args,
@@ -170,7 +174,7 @@ train_cfg = dict(max_epochs=max_epochs, val_interval=interval)
 
 # optimizer
 # default 8 gpu
-base_lr = 0.01
+base_lr = 0.01 / 4
 optim_wrapper = dict(
     type="OptimWrapper",
     optimizer=dict(type="SGD", lr=base_lr, momentum=0.9, weight_decay=5e-4, nesterov=True),
@@ -220,4 +224,4 @@ custom_hooks = [
 # NOTE: `auto_scale_lr` is for automatically scaling LR,
 # USER SHOULD NOT CHANGE ITS VALUES.
 # base_batch_size = (8 GPUs) x (8 samples per GPU)
-auto_scale_lr = dict(base_batch_size=64)
+auto_scale_lr = dict(base_batch_size=16)
