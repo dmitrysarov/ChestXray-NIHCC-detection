@@ -85,7 +85,7 @@ train_pipeline = [
         border=(-img_scale[0] // 2, -img_scale[1] // 2),
     ),
     dict(type="MixUp", img_scale=img_scale, ratio_range=(0.8, 1.6), pad_val=114.0),
-    dict(type="YOLOXHSVRandomAug"),
+    # dict(type="YOLOXHSVRandomAug"),
     dict(type="RandomFlip", prob=0.5),
     # According to the official implementation, multi-scale
     # training is not considered here but in the
