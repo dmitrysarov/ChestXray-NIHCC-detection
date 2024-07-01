@@ -6,7 +6,7 @@ default_hooks = dict(
     param_scheduler=dict(type="ParamSchedulerHook"),
     checkpoint=dict(type="CheckpointHook", interval=1, save_best="coco/bbox_mAP", rule="greater"),
     sampler_seed=dict(type="DistSamplerSeedHook"),
-    visualization=dict(type="DetVisualizationHook"),
+    visualization=dict(type="DetVisualizationHook", draw=True),
 )
 
 env_cfg = dict(

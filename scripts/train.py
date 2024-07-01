@@ -94,6 +94,11 @@ def main():
         for i, _ in enumerate(cfg["custom_hooks"]):
             if cfg["custom_hooks"][i].get("type", None) == "MLflowHook":
                 cfg["custom_hooks"][i]["run_name"] = args.run_name
+
+    if cfg.get("default_hooks", None):
+        for i, _ in enumerate(cfg["default_hooks"]):
+            if cfg["default_hooks"][i].get("type", None) == "DetVisualizationHook":
+                cfg["default_hooks"][i]["test_out_dir"] = os.path.join(args.run_name.work_dir, "prediction_images")
     # enable automatic-mixed-precision training
     if args.amp is True:
         cfg.optim_wrapper.type = "AmpOptimWrapper"
