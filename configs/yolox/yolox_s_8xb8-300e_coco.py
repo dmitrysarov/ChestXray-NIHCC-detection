@@ -174,7 +174,7 @@ train_cfg = dict(max_epochs=max_epochs, val_interval=interval)
 
 # optimizer
 # default 8 gpu
-base_lr = 0.001
+base_lr = 0.0001
 optim_wrapper = dict(
     type="OptimWrapper",
     optimizer=dict(type="SGD", lr=base_lr, momentum=0.9, weight_decay=5e-4, nesterov=True),
