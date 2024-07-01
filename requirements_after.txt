@@ -1,1 +1,1 @@
-mmdet @ git+ssh://git@github.com/open-mmlab/mmdetection.git@v3.3.0
+mmdet @ git+https://github.com/open-mmlab/mmdetection.git@v3.3.0
