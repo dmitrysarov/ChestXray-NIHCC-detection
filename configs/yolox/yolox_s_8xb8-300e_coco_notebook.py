@@ -109,7 +109,18 @@ train_dataset = dict(
     type="MultiImageMixDataset",
     dataset=dict(
         type=dataset_type,
-        metainfo=dict(classes=[]),
+        metainfo=dict(
+            classes=[
+                "Atelectasis",
+                "Cardiomegaly",
+                "Effusion",
+                "Infiltrate",
+                "Mass",
+                "Nodule",
+                "Pneumonia",
+                "Pneumothorax",
+            ]
+        ),
         data_root=data_root,
         ann_file="annotation/train.json",
         data_prefix=dict(img="images/"),
@@ -147,7 +158,18 @@ val_dataloader = dict(
     dataset=dict(
         type=dataset_type,
         data_root=data_root,
-        metainfo=dict(classes=[]),
+        metainfo=dict(
+            classes=[
+                "Atelectasis",
+                "Cardiomegaly",
+                "Effusion",
+                "Infiltrate",
+                "Mass",
+                "Nodule",
+                "Pneumonia",
+                "Pneumothorax",
+            ]
+        ),
         ann_file="annotation/val.json",
         data_prefix=dict(img="images/"),
         test_mode=True,

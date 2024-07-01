@@ -4,6 +4,7 @@ import os
 import os.path as osp
 import re
 import shutil
+import time
 from collections.abc import MutableMapping, MutableSequence
 from glob import glob
 from multiprocessing import Process
@@ -265,6 +266,7 @@ class MLflowHook(LoggerHook):
                         artifact_path="checkpoints",
                     )
             if self.every_n_epochs(runner, self.log_model_interval):
+                time.sleep(10)
                 self.upload_artifacts_subproc(
                     osp.join(runner.work_dir, f"epoch_{runner.epoch + 1}.pth"), artifact_path="checkpoints"
                 )
