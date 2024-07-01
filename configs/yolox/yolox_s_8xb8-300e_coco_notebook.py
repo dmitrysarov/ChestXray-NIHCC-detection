@@ -112,7 +112,7 @@ train_dataset = dict(
         metainfo=dict(classes=[]),
         data_root=data_root,
         ann_file="annotation/train.json",
-        data_prefix=dict(img="data/images1000/"),
+        data_prefix=dict(img="images1000/"),
         pipeline=[
             dict(type="LoadImageFromFile", backend_args=backend_args),
             dict(type="LoadAnnotations", with_bbox=True),
@@ -149,7 +149,7 @@ val_dataloader = dict(
         data_root=data_root,
         metainfo=dict(classes=[]),
         ann_file="annotation/val.json",
-        data_prefix=dict(img="data/images1000/"),
+        data_prefix=dict(img="images1000/"),
         test_mode=True,
         pipeline=test_pipeline,
         backend_args=backend_args,
