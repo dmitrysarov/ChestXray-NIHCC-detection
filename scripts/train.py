@@ -148,7 +148,7 @@ def main():
             param.register_hook(inspect_gradient)
 
             # start training
-        # runner.train()
+        runner.train()
 
         cfg.load_from = str(Path(runner.work_dir) / "best.pth")
         if "runner_type" not in cfg:
