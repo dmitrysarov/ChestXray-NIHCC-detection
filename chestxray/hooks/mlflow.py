@@ -120,7 +120,9 @@ class MLflowHook(LoggerHook):
     @master_only
     def before_run(self, runner):
         super().before_run(runner)
-        if self.run_id:
+        if mlflow.active_run():
+            pass
+        elif self.run_id:
             self.ml.start_run(run_id=self.run_id)
         else:
             self.ml.start_run(run_name=self.run_name)
