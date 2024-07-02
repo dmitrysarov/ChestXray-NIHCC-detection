@@ -28,7 +28,7 @@ from mmengine.registry import HOOKS
 
 from chestxray.logger import get_logger
 
-logger = get_logger(__name__, level="DEBUG")
+logger = get_logger(__name__, level="INFO")
 
 
 def get_git_remote_url():
@@ -85,6 +85,7 @@ class MLflowHook(LoggerHook):
         save_last=True,
         ignore_keys=(),
         run_name="exp",
+        run_id=None,
     ):
         super().__init__(interval=interval, ignore_last=ignore_last)  # , reset_flag, by_epoch)
         self.log_model = log_model
@@ -94,6 +95,10 @@ class MLflowHook(LoggerHook):
         self.run_name = run_name
         self.ml = mlflow
         self.run = None
+        if run_id:
+            self.run_id = run_id
+        else:
+            self.run_id = None
 
     def log_min_max_metrics(self, runner):
         run_id = self.ml.active_run().info.run_id
@@ -115,7 +120,10 @@ class MLflowHook(LoggerHook):
     @master_only
     def before_run(self, runner):
         super().before_run(runner)
-        self.ml.start_run(run_name=self.run_name)
+        if self.run_id:
+            self.ml.start_run(run_id=self.run_id)
+        else:
+            self.ml.start_run(run_name=self.run_name)
         self.run_id = self.ml.active_run().info.run_id
         config_path = osp.join(osp.join(runner.log_dir, "vis_data", "config.py"))
         cfg = dict(Config.fromfile(config_path))
@@ -187,7 +195,10 @@ class MLflowHook(LoggerHook):
         tag, log_str = runner.log_processor.get_log_after_epoch(
             runner, len(runner.test_dataloader), "test", with_non_scalar=True
         )
+        tag = {f"test_{k}": v for k, v in tag.items()}
         self.ml.log_metrics(tag, step=runner.epoch + 1)
+
+        self.ml.log_artifacts(str(Path(runner.log_dir) / "prediction_images"), artifact_path="", run_id=self.run_id)
 
     @master_only
     def after_val_epoch(self, runner, metrics: Optional[Dict[str, float]] = None):
@@ -231,6 +242,3 @@ class MLflowHook(LoggerHook):
                     osp.join(runner.work_dir, f"epoch_{runner.epoch}.pth"),
                     artifact_path="checkpoints",
                 )
-                for img_file in (Path(runner.log_dir) / "vis_data" / "vis_image").rglob("*.png"):
-                    self.ml.log_artifact(str(img_file), artifact_path="pred_annotation", run_id=self.run_id)
-                    os.remove(str(img_file))
