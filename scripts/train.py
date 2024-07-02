@@ -151,12 +151,6 @@ def main():
         # runner.train()
 
         cfg.load_from = str(Path(runner.work_dir) / "best.pth")
-        # TODO remove this
-        if cfg.get("custom_hooks", None):
-            for i, _ in enumerate(cfg["custom_hooks"]):
-                if cfg["custom_hooks"][i].get("type", None) == "MLflowHook":
-                    cfg["custom_hooks"][i]["run_id"] = "138bedbeb096462ba73936756d776aa8"
-        # build the runner from config
         if "runner_type" not in cfg:
             # build the default runner
             runner = Runner.from_cfg(cfg)
