@@ -149,7 +149,13 @@ def main():
 
             # start training
         # runner.train()
+        if cfg.get("custom_hooks", None):
+            for i, _ in enumerate(cfg["custom_hooks"]):
+                if cfg["custom_hooks"][i].get("type", None) == "MLflowHook":
+                    cfg["custom_hooks"][i]["run_id"] = '927ba90ae5934d7d926f53b0c54a7f08'
+
         runner.call_hook("before_run")
+
         runner._has_loaded = False
         runner._resume = False
         runner._load_from = "/kaggle/working/ChestXray-NIHCC-detection/work_dirs/yolox_tiny_8xb8-300e_coco_notebook/coco_pretrained/best.pth"
