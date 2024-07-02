@@ -148,7 +148,8 @@ def main():
             param.register_hook(inspect_gradient)
 
             # start training
-        runner.train()
+        # runner.train()
+        runner.call_hook("before_run")
         runner._has_loaded = False
         runner._resume = False
         runner._load_from = "/kaggle/working/ChestXray-NIHCC-detection/work_dirs/yolox_tiny_8xb8-300e_coco_notebook/coco_pretrained/best.pth"
