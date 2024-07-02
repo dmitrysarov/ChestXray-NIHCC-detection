@@ -151,7 +151,9 @@ def main():
         runner.train()
         runner.model.load_state_dict(torch.load(str(Path(runner.work_dir) / "best.pth"))["state_dict"])
         print("runner loaded checkpoint")
-        runner.test()
+        runner.test_loop.run()
+        runner.call_hook("after_run")
+
     except Exception as e:
         mlflow_hook = [hook for hook in runner.hooks if isinstance(hook, MLflowHook)][0]
         mlflow_hook.ml.log_text(traceback.format_exc(), "error_traceback.txt")
