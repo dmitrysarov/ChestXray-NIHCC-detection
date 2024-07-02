@@ -82,7 +82,7 @@ class MLflowHook(LoggerHook):
         by_epoch=True,
         log_model=True,
         log_model_interval=1,
-        save_last=True,
+        save_last=False,
         ignore_keys=(),
         run_name="exp",
         run_id=None,
@@ -126,33 +126,33 @@ class MLflowHook(LoggerHook):
             self.ml.start_run(run_id=self.run_id)
         else:
             self.ml.start_run(run_name=self.run_name)
-        self.run_id = self.ml.active_run().info.run_id
-        config_path = osp.join(osp.join(runner.log_dir, "vis_data", "config.py"))
-        cfg = dict(Config.fromfile(config_path))
+            self.run_id = self.ml.active_run().info.run_id
+            config_path = osp.join(osp.join(runner.log_dir, "vis_data", "config.py"))
+            cfg = dict(Config.fromfile(config_path))
 
-        # hack to avoid mlflow limit of 100 keys
-        for batch_params in batchify_dict(flatten(cfg, ignore_keys=self.ignore_keys), batch_size=100):
-            self.ml.log_params(batch_params)
-        self.ml.log_params({"git_remote": get_git_remote_url()})
-        self.ml.log_params({"DEBUG": int(os.environ.get("DEBUG", 0))})
-        number_of_folds = os.environ.get("NUMBER_OF_FOLDS", None)
-        if number_of_folds:
-            self.ml.log_param("number_of_folds", int(number_of_folds))
-        if os.path.exists("dvc.lock"):
-            import hashlib
+            # hack to avoid mlflow limit of 100 keys
+            for batch_params in batchify_dict(flatten(cfg, ignore_keys=self.ignore_keys), batch_size=100):
+                self.ml.log_params(batch_params)
+            self.ml.log_params({"git_remote": get_git_remote_url()})
+            self.ml.log_params({"DEBUG": int(os.environ.get("DEBUG", 0))})
+            number_of_folds = os.environ.get("NUMBER_OF_FOLDS", None)
+            if number_of_folds:
+                self.ml.log_param("number_of_folds", int(number_of_folds))
+            if os.path.exists("dvc.lock"):
+                import hashlib
 
-            self.ml.log_param("dvc_dataset_version", hashlib.md5(open("dvc.lock", "rb").read()).hexdigest())
-        try:
-            repo = Repo(".")
-            self.ml.set_tag("git remote repo", repo.remote().url)
-        except InvalidGitRepositoryError:
-            print("no git repository")
+                self.ml.log_param("dvc_dataset_version", hashlib.md5(open("dvc.lock", "rb").read()).hexdigest())
+            try:
+                repo = Repo(".")
+                self.ml.set_tag("git remote repo", repo.remote().url)
+            except InvalidGitRepositoryError:
+                print("no git repository")
 
-        # save config as a file
-        self.upload_artifacts_subproc(config_path, artifact_path="")
+            # save config as a file
+            self.upload_artifacts_subproc(config_path, artifact_path="")
 
     @master_only
-    def after_run(self, runner):
+    def after_train(self, runner):
         if osp.exists(osp.join(runner.work_dir, "best_calibrated.pth")):
             self.upload_artifacts_subproc(
                 osp.join(runner.work_dir, "best_calibrated.pth"),
@@ -162,11 +162,6 @@ class MLflowHook(LoggerHook):
         self.ml.log_artifact(
             str((Path(runner.log_dir) / Path(runner.log_dir).name).with_suffix(".log")), artifact_path=""
         )
-        # self.ml.log_artifacts(
-        #     os.path.join(runner.work_dir, str(runner.timestamp), "prediction_images"),
-        #     artifact_path="prediction_images",
-        #     run_id=self.run_id,
-        # )
         super().after_run(runner)
         self.ml.end_run()
 
@@ -187,7 +182,7 @@ class MLflowHook(LoggerHook):
         self.ml.log_metrics(tag, step=runner.iter + 1)
 
     @master_only
-    def after_test_epoch(self, runner, metrics: Optional[Dict[str, float]] = None) -> None:
+    def after_test(self, runner) -> None:
         """All subclasses should override this method, if they need any
         operations after each test epoch.
 

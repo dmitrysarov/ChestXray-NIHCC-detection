@@ -158,7 +158,7 @@ def main():
 
         runner._has_loaded = False
         runner._resume = False
-        runner._load_from = "/kaggle/working/ChestXray-NIHCC-detection/work_dirs/yolox_tiny_8xb8-300e_coco_notebook/coco_pretrained/best.pth"
+        runner._load_from = str(Path(runner.work_dir / "best.pth"))
         runner.load_or_resume()
         print("runner loaded checkpoint")
         runner.test()
