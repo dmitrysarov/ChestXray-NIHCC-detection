@@ -205,7 +205,6 @@ class MLflowHook(LoggerHook):
     @master_only
     def after_val_epoch(self, runner, metrics: Optional[Dict[str, float]] = None):
         logger.debug("Logging metrics for val epoch")
-        super(MLflowHook, self).after_val_epoch(runner)
 
         tag, log_str = runner.log_processor.get_log_after_epoch(runner, len(runner.val_dataloader), "val")
         self.ml.log_metrics(tag, step=runner.epoch)
@@ -226,8 +225,10 @@ class MLflowHook(LoggerHook):
                     best_chck = best_checkpoints[-1]
                     best_epoch = int(re.findall("epoch_(\d+).pth", best_chck)[0])
                     self.ml.log_metric("best_epoch_number", best_epoch)
+                    _best_unified_path = osp.join(runner.work_dir, "_best.pth")
                     best_unified_path = osp.join(runner.work_dir, "best.pth")
-                    shutil.move(best_chck, best_unified_path)
+                    shutil.copyfile(best_chck, _best_unified_path)
+                    shutil.copyfile(best_chck, best_unified_path)
                     self.upload_artifacts_subproc(
                         best_unified_path,
                         artifact_path="checkpoints",

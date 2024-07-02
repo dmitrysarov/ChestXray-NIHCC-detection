@@ -150,7 +150,7 @@ def main():
             # start training
         runner.train()
 
-        cfg.load_from = str(Path(runner.work_dir) / "best.pth")
+        cfg.load_from = str(Path(runner.work_dir) / "_best.pth")
         if "runner_type" not in cfg:
             # build the default runner
             runner = Runner.from_cfg(cfg)
