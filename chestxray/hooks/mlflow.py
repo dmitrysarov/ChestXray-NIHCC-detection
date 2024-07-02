@@ -139,7 +139,7 @@ class MLflowHook(LoggerHook):
             print("no git repository")
 
         # save config as a file
-        self.ml.log_artifact(config_path, artifact_path="")
+        self.upload_artifacts_subproc(config_path, artifact_path="")
 
     @master_only
     def after_run(self, runner):
@@ -169,28 +169,7 @@ class MLflowHook(LoggerHook):
             data_batch (dict tuple or list, optional): Data from dataloader.
             outputs (dict, optional): Outputs from model.
         """
-        # Print experiment name every n iterations.
-        if self.every_n_train_iters(runner, self.interval_exp_name) or (
-            self.end_of_epoch(runner.train_dataloader, batch_idx)
-        ):
-            exp_info = f"Exp name: {runner.experiment_name}"
-            runner.logger.info(exp_info)
-        if self.every_n_inner_iters(batch_idx, self.interval):
-            tag, log_str = runner.log_processor.get_log_after_iter(runner, batch_idx, "train")
-            self.ml.log_metrics(tag, step=runner.iter + 1)
-        elif self.end_of_epoch(runner.train_dataloader, batch_idx) and (
-            not self.ignore_last or len(runner.train_dataloader) <= self.interval
-        ):
-            # `runner.max_iters` may not be divisible by `self.interval`. if
-            # `self.ignore_last==True`, the log of remaining iterations will
-            # be recorded (Epoch [4][1000/1007], the logs of 998-1007
-            # iterations will be recorded).
-            tag, log_str = runner.log_processor.get_log_after_iter(runner, batch_idx, "train")
-            self.ml.log_metrics(tag, step=runner.iter + 1)
-        else:
-            return
-        runner.logger.info(log_str)
-        runner.visualizer.add_scalars(tag, step=runner.iter + 1, file_path=self.json_log_path)
+        tag, log_str = runner.log_processor.get_log_after_iter(runner, batch_idx, "train")
         self.ml.log_metrics(tag, step=runner.iter + 1)
 
     @master_only
@@ -211,11 +190,11 @@ class MLflowHook(LoggerHook):
 
     @master_only
     def after_val_epoch(self, runner, metrics: Optional[Dict[str, float]] = None):
+        logger.debug("Logging metrics for val epoch")
         super(MLflowHook, self).after_val_epoch(runner)
 
         tag, log_str = runner.log_processor.get_log_after_epoch(runner, len(runner.val_dataloader), "val")
         self.ml.log_metrics(tag, step=runner.epoch)
-        runner.logger.info(log_str)
 
         if self.log_model:
 
@@ -246,7 +225,10 @@ class MLflowHook(LoggerHook):
                         artifact_path="checkpoints",
                     )
             if self.every_n_epochs(runner, self.log_model_interval):
-                print("uploading model")
+                import ipdb
+
+                ipdb.set_trace()
+                logger.debug("Upload model and images")
                 self.upload_artifacts_subproc(
                     osp.join(runner.work_dir, f"epoch_{runner.epoch}.pth"),
                     artifact_path="checkpoints",

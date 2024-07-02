@@ -1,7 +1,7 @@
 import logging
 
 
-def get_logger(name=None, level="INFO"):
+def get_logger(name=None, level="DEBUG"):
     class CustomFormatter(logging.Formatter):
         grey = "\x1b[38;20m"
         green = "\x1b[32;20m"
