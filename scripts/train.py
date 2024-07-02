@@ -148,7 +148,8 @@ def main():
             param.register_hook(inspect_gradient)
 
             # start training
-        runner.train()
+        # runner.train()
+        runner.call_hook("before_run")
         runner.model.load_state_dict(torch.load(str(Path(runner.work_dir) / "best.pth"))["state_dict"])
         print("runner loaded checkpoint")
         runner.test_loop.run()
