@@ -149,6 +149,7 @@ def main():
 
             # start training
         runner.train()
+        runner.test()
     except Exception as e:
         mlflow_hook = [hook for hook in runner.hooks if isinstance(hook, MLflowHook)][0]
         mlflow_hook.ml.log_text(traceback.format_exc(), "error_traceback.txt")
