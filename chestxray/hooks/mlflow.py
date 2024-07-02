@@ -28,7 +28,7 @@ from mmengine.registry import HOOKS
 
 from chestxray.logger import get_logger
 
-logger = get_logger(__name__)
+logger = get_logger(__name__, level="DEBUG")
 
 
 def get_git_remote_url():
@@ -169,6 +169,10 @@ class MLflowHook(LoggerHook):
             data_batch (dict tuple or list, optional): Data from dataloader.
             outputs (dict, optional): Outputs from model.
         """
+        import ipdb
+
+        ipdb.set_trace()
+
         tag, log_str = runner.log_processor.get_log_after_iter(runner, batch_idx, "train")
         self.ml.log_metrics(tag, step=runner.iter + 1)
 
