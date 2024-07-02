@@ -149,7 +149,12 @@ def main():
 
             # start training
         # runner.train()
+        if cfg.get("custom_hooks", None):
+            for i, _ in enumerate(cfg["custom_hooks"]):
+                if cfg["custom_hooks"][i].get("type", None) == "MLflowHook":
+                    cfg["custom_hooks"][i]["run_id"] = '138bedbeb096462ba73936756d776aa8'
         runner.call_hook("before_run")
+
         runner.model.load_state_dict(torch.load(str(Path(runner.work_dir) / "best.pth"))["state_dict"])
         print("runner loaded checkpoint")
         runner.test_loop.run()
