@@ -160,8 +160,10 @@ def main():
         # runner._resume = False
         # runner._load_from = str(Path(runner.work_dir) / "best.pth")
         # runner.load_or_resume()
-        os.listdir(
-            "/kaggle/working/ChestXray-NIHCC-detection/work_dirs/yolox_tiny_8xb8-300e_coco_notebook/coco_pretrained/"
+        print(
+            os.listdir(
+                "/kaggle/working/ChestXray-NIHCC-detection/work_dirs/yolox_tiny_8xb8-300e_coco_notebook/coco_pretrained/"
+            )
         )
         runner.model.load_state_dict(torch.load(str(Path(runner.work_dir) / "best.pth"))["state_dict"])
         print("runner loaded checkpoint")
