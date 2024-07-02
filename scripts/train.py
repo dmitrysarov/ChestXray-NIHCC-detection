@@ -149,6 +149,7 @@ def main():
 
             # start training
         runner.train()
+        runner.resume(str(Path(runner.work_dir) / "best.pth"))
         runner.test()
     except Exception as e:
         mlflow_hook = [hook for hook in runner.hooks if isinstance(hook, MLflowHook)][0]

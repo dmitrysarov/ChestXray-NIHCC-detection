@@ -28,7 +28,7 @@ from mmengine.registry import HOOKS
 
 from chestxray.logger import get_logger
 
-logger = get_logger(__name__, level="INFO")
+logger = get_logger(__name__, level="DEBUG")
 
 
 def get_git_remote_url():
@@ -157,11 +157,11 @@ class MLflowHook(LoggerHook):
                 artifact_path="checkpoints",
             )
         self.log_min_max_metrics(runner)
-        self.ml.log_artifacts(
-            os.path.join(runner.work_dir, str(runner.timestamp), "prediction_images"),
-            artifact_path="prediction_images",
-            run_id=self.run_id,
-        )
+        # self.ml.log_artifacts(
+        #     os.path.join(runner.work_dir, str(runner.timestamp), "prediction_images"),
+        #     artifact_path="prediction_images",
+        #     run_id=self.run_id,
+        # )
         super().after_run(runner)
         self.ml.end_run()
 
@@ -198,7 +198,9 @@ class MLflowHook(LoggerHook):
         tag = {f"test_{k}": v for k, v in tag.items()}
         self.ml.log_metrics(tag, step=runner.epoch + 1)
 
-        self.ml.log_artifacts(str(Path(runner.log_dir) / "prediction_images"), artifact_path="", run_id=self.run_id)
+        self.ml.log_artifacts(
+            str(Path(runner.log_dir) / "prediction_images"), artifact_path="prediction_images", run_id=self.run_id
+        )
 
     @master_only
     def after_val_epoch(self, runner, metrics: Optional[Dict[str, float]] = None):
@@ -210,11 +212,15 @@ class MLflowHook(LoggerHook):
 
         if self.log_model:
 
-            if self.is_last_train_epoch(runner):
+            if runner.epoch == runner.max_epochs:
+                logger.debug(list(glob(osp.join(runner.work_dir, "best_*.pth"))))
+                logger.debug(re.findall("epoch_(\d+).pth", list(glob(osp.join(runner.work_dir, "best_*.pth")))[0]))
+
                 best_checkpoints = sorted(
                     glob(osp.join(runner.work_dir, "best_*.pth")),
                     key=lambda x: int(re.findall("epoch_(\d+).pth", x)[0]),
                 )
+                logger.debug(f"best_checkpoints {best_checkpoints}")
 
                 if best_checkpoints:
                     best_chck = best_checkpoints[-1]
@@ -237,7 +243,6 @@ class MLflowHook(LoggerHook):
                         artifact_path="checkpoints",
                     )
             if runner.epoch % self.log_model_interval == 0:
-                logger.debug("Upload model and images")
                 self.upload_artifacts_subproc(
                     osp.join(runner.work_dir, f"epoch_{runner.epoch}.pth"),
                     artifact_path="checkpoints",
