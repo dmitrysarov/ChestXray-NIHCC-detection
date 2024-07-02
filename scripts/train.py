@@ -104,13 +104,11 @@ def main():
                 if cfg["default_hooks"][key].get("type", None) == "DetVisualizationHook":
                     cfg["default_hooks"][key]["test_out_dir"] = "prediction_images"
 
-
         # TODO remove this
         if cfg.get("custom_hooks", None):
             for i, _ in enumerate(cfg["custom_hooks"]):
                 if cfg["custom_hooks"][i].get("type", None) == "MLflowHook":
                     cfg["custom_hooks"][i]["run_id"] = "138bedbeb096462ba73936756d776aa8"
-
 
         # enable automatic-mixed-precision training
         if args.amp is True:
@@ -159,7 +157,8 @@ def main():
         # runner.train()
         runner.call_hook("before_run")
 
-        runner.model.module.load_state_dict(torch.load(str(Path(runner.work_dir) / "best.pth"))["state_dict"])
+        # runner.model.module.load_state_dict(torch.load(str(Path(runner.work_dir) / "best.pth"))["state_dict"])
+        runner.model.load_state_dict(torch.load(str(Path(runner.work_dir) / "best.pth"))["state_dict"])
         print("runner loaded checkpoint")
         runner.test_loop.run()
         runner.call_hook("after_run")
