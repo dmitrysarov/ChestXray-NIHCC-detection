@@ -108,7 +108,7 @@ class MLflowHook(LoggerHook):
         self.ml.log_metrics(minmax_log_metrics, step=runner.iter + 1)
 
     def upload_artifacts_subproc(self, local_path: str, artifact_path: Optional[str] = None):
-        partial_log = partial(self.ml.log_artifact, local_path, artifact_path, run_id=self.run_id)
+        partial_log = partial(self.ml.log_artifact, run_id=self.run_id)
         proc = Process(target=partial_log, args=(local_path, artifact_path))
         proc.start()
 
