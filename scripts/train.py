@@ -104,12 +104,6 @@ def main():
                 if cfg["default_hooks"][key].get("type", None) == "DetVisualizationHook":
                     cfg["default_hooks"][key]["test_out_dir"] = "prediction_images"
 
-        # TODO remove this
-        if cfg.get("custom_hooks", None):
-            for i, _ in enumerate(cfg["custom_hooks"]):
-                if cfg["custom_hooks"][i].get("type", None) == "MLflowHook":
-                    cfg["custom_hooks"][i]["run_id"] = "138bedbeb096462ba73936756d776aa8"
-
         # enable automatic-mixed-precision training
         if args.amp is True:
             cfg.optim_wrapper.type = "AmpOptimWrapper"
@@ -155,13 +149,22 @@ def main():
 
             # start training
         # runner.train()
-        runner.call_hook("before_run")
 
-        # runner.model.module.load_state_dict(torch.load(str(Path(runner.work_dir) / "best.pth"))["state_dict"])
-        runner.model.load_state_dict(torch.load(str(Path(runner.work_dir) / "best.pth"))["state_dict"])
-        print("runner loaded checkpoint")
-        runner.test_loop.run()
-        runner.call_hook("after_run")
+        cfg.load_from = str(Path(runner.work_dir) / "best.pth")
+        # TODO remove this
+        if cfg.get("custom_hooks", None):
+            for i, _ in enumerate(cfg["custom_hooks"]):
+                if cfg["custom_hooks"][i].get("type", None) == "MLflowHook":
+                    cfg["custom_hooks"][i]["run_id"] = "138bedbeb096462ba73936756d776aa8"
+        # build the runner from config
+        if "runner_type" not in cfg:
+            # build the default runner
+            runner = Runner.from_cfg(cfg)
+        else:
+            # build customized runner from the registry
+            # if 'runner_type' is set in the cfg
+            runner = RUNNERS.build(cfg)
+        runner.test()
 
     except Exception as e:
         mlflow_hook = [hook for hook in runner.hooks if isinstance(hook, MLflowHook)][0]
