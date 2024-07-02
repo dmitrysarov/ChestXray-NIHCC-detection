@@ -148,8 +148,12 @@ def main():
             param.register_hook(inspect_gradient)
 
             # start training
-        runner.train()
-        runner.resume(str(Path(runner.work_dir) / "best.pth"))
+        # runner.train()
+        # runner.load_checkpoint(str(Path(runner.work_dir) / "best.pth"))
+        runner.load_checkpoint(
+            "/kaggle/working/ChestXray-NIHCC-detection/work_dirs/yolox_tiny_8xb8-300e_coco_notebook/coco_pretrained/best.pth"
+        )
+        print("runner loaded checkpoint")
         runner.test()
     except Exception as e:
         mlflow_hook = [hook for hook in runner.hooks if isinstance(hook, MLflowHook)][0]
