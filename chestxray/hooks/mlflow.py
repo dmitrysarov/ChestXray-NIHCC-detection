@@ -169,10 +169,7 @@ class MLflowHook(LoggerHook):
             data_batch (dict tuple or list, optional): Data from dataloader.
             outputs (dict, optional): Outputs from model.
         """
-        import ipdb
-
-        ipdb.set_trace()
-
+        logger.debug(f"iter: {runner.iter}, batch_idx: {batch_idx}")
         tag, log_str = runner.log_processor.get_log_after_iter(runner, batch_idx, "train")
         self.ml.log_metrics(tag, step=runner.iter + 1)
 
@@ -228,10 +225,7 @@ class MLflowHook(LoggerHook):
                         osp.join(runner.work_dir, "latest.pth"),
                         artifact_path="checkpoints",
                     )
-            if self.every_n_epochs(runner, self.log_model_interval):
-                import ipdb
-
-                ipdb.set_trace()
+            if runner.epoch % self.log_model_interval == 0:
                 logger.debug("Upload model and images")
                 self.upload_artifacts_subproc(
                     osp.join(runner.work_dir, f"epoch_{runner.epoch}.pth"),
