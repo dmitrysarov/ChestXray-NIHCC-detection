@@ -152,7 +152,7 @@ def main():
     except Exception as e:
         mlflow_hook = [hook for hook in runner.hooks if isinstance(hook, MLflowHook)][0]
         mlflow_hook.ml.log_text(traceback.format_exc(), "error_traceback.txt")
-        mlflow_hook.ml.artifact(
+        mlflow_hook.ml.log_artifact(
             (Path(runner.log_dir) / Path(runner.log_dir).name).with_suffix(".log"), artifact_path=""
         )
         mlflow_hook.ml.end_run("FAILED")
