@@ -148,23 +148,7 @@ def main():
             param.register_hook(inspect_gradient)
 
             # start training
-        # runner.train()
-        if cfg.get("custom_hooks", None):
-            for i, _ in enumerate(cfg["custom_hooks"]):
-                if cfg["custom_hooks"][i].get("type", None) == "MLflowHook":
-                    cfg["custom_hooks"][i]["run_id"] = "927ba90ae5934d7d926f53b0c54a7f08"
-
-        # runner.call_hook("before_run")
-
-        # runner._has_loaded = False
-        # runner._resume = False
-        # runner._load_from = str(Path(runner.work_dir) / "best.pth")
-        # runner.load_or_resume()
-        print(
-            os.listdir(
-                "/kaggle/working/ChestXray-NIHCC-detection/work_dirs/yolox_tiny_8xb8-300e_coco_notebook/coco_pretrained/"
-            )
-        )
+        runner.train()
         runner.model.load_state_dict(torch.load(str(Path(runner.work_dir) / "best.pth"))["state_dict"])
         print("runner loaded checkpoint")
         runner.test()
