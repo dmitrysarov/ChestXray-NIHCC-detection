@@ -150,7 +150,9 @@ def main():
             # start training
         # runner.train()
         # runner.load_checkpoint(str(Path(runner.work_dir) / "best.pth"))
+        runner.before_run()
         runner._has_loaded = False
+        runner.self._resume = False
         runner._load_from = "/kaggle/working/ChestXray-NIHCC-detection/work_dirs/yolox_tiny_8xb8-300e_coco_notebook/coco_pretrained/best.pth"
         runner.load_or_resume()
         print("runner loaded checkpoint")
