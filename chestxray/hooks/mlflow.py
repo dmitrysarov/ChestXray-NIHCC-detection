@@ -157,6 +157,9 @@ class MLflowHook(LoggerHook):
                 artifact_path="checkpoints",
             )
         self.log_min_max_metrics(runner)
+        self.ml.log_artifact(
+            str((Path(runner.log_dir) / Path(runner.log_dir).name).with_suffix(".log")), artifact_path=""
+        )
         # self.ml.log_artifacts(
         #     os.path.join(runner.work_dir, str(runner.timestamp), "prediction_images"),
         #     artifact_path="prediction_images",
